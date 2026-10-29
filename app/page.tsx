@@ -76,52 +76,54 @@ export default function LandingPage() {
       ═══════════════════════════════════════════════════════ */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 px-6 md:px-12 py-3.5 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-tangerine to-tangerine-600 flex items-center justify-center text-white shadow-tangerine-glow transition-transform group-hover:scale-105">
-            <Sparkles className="w-4 h-4" />
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-olive-600 to-olive-700 flex items-center justify-center text-white shadow-md shadow-olive-600/30 transition-transform group-hover:scale-105">
+            <Sparkles className="w-4 h-4 text-olive-100" />
           </div>
           <div>
             <div className="font-display font-bold text-base text-slate-900 tracking-tight flex items-center gap-1.5">
               TataDana
-              <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded bg-tangerine-100 text-tangerine-700 tracking-wider">
+              <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded bg-olive-100 text-olive-800 border border-olive-200 tracking-wider">
                 Prime
               </span>
             </div>
-            <p className="text-[10px] text-slate-400 font-medium">Executive Wealth OS</p>
+            <p className="text-[10px] text-olive-800/70 font-semibold">Executive Wealth OS</p>
           </div>
         </Link>
 
         {/* Nav Links */}
         <nav className="hidden md:flex items-center gap-7 text-xs font-semibold text-slate-600">
-          <a href="#fitur" className="hover:text-tangerine-600 transition-colors">
+          <a href="#fitur" className="hover:text-olive-700 transition-colors">
             Fitur Utama
           </a>
-          <a href="#solusi" className="hover:text-tangerine-600 transition-colors">
+          <a href="#solusi" className="hover:text-olive-700 transition-colors">
             Solusi Kas
           </a>
-          <a href="#roi-calculator" className="hover:text-tangerine-600 transition-colors">
+          <a href="#roi-calculator" className="hover:text-olive-700 transition-colors">
             Kalkulator Kebocoran
           </a>
-          <a href="#harga" className="hover:text-tangerine-600 transition-colors">
+          <a href="#harga" className="hover:text-olive-700 transition-colors">
             Biaya Langganan
           </a>
-          <a href="#faq" className="hover:text-tangerine-600 transition-colors">
+          <a href="#faq" className="hover:text-olive-700 transition-colors">
             FAQ & Keamanan
           </a>
         </nav>
 
-        {/* Auth Buttons */}
+        {/* Auth Buttons: Khusus Admin vs Masuk & Daftar User */}
         <div className="flex items-center gap-3">
           <Link
-            href="/login?tab=admin"
-            className="text-xs font-bold text-slate-700 hover:text-slate-900 px-3.5 py-2 rounded-xl transition-colors"
+            href="/login?role=admin"
+            className="text-xs font-bold text-slate-700 hover:text-olive-800 px-3 py-2 rounded-xl border border-slate-200 hover:border-olive-300 hover:bg-olive-50/50 flex items-center gap-1.5 transition-all shadow-sm"
+            title="Portal Khusus Administrator & Superadmin Desk"
           >
-            Masuk Akun
+            <ShieldCheck className="w-3.5 h-3.5 text-olive-600" />
+            <span>Portal Khusus Admin</span>
           </Link>
           <Link
-            href="/login?tab=user"
-            className="px-4 py-2 bg-gradient-to-r from-tangerine to-tangerine-600 hover:from-tangerine-600 hover:to-tangerine-700 text-white text-xs font-bold rounded-xl shadow-tangerine-glow transition-all hover:scale-105"
+            href="/login?role=user"
+            className="px-4 py-2 bg-gradient-to-r from-olive-600 to-olive-700 hover:from-olive-700 hover:to-olive-800 text-white text-xs font-bold rounded-xl shadow-md shadow-olive-600/30 transition-all hover:scale-105"
           >
-            Masuk & Daftar
+            Daftar / Masuk Pengguna
           </Link>
         </div>
       </header>
@@ -131,15 +133,15 @@ export default function LandingPage() {
       ═══════════════════════════════════════════════════════ */}
       <section className="relative pt-16 pb-20 px-6 md:px-12 max-w-6xl mx-auto text-center overflow-hidden">
         {/* Pre-headline tag */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-50 border border-sky-200 text-xs font-bold text-sky-800 mb-6 shadow-sm animate-fadeIn">
-          <Sparkles className="w-3.5 h-3.5 text-sky-600" />
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-olive-50 border border-olive-200 text-xs font-bold text-olive-800 mb-6 shadow-sm animate-fadeIn">
+          <Sparkles className="w-3.5 h-3.5 text-olive-600" />
           <span>Platform Otomasi Cashflow & Wealth OS Terintegrasi Telegram Pertama di Indonesia</span>
         </div>
 
         {/* H1 Headline */}
         <h1 className="font-display font-extrabold text-3xl sm:text-5xl md:text-6xl text-slate-900 tracking-tight leading-[1.15] max-w-4xl mx-auto">
           Hentikan Kebocoran Kas. Bangun{" "}
-          <span className="bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-olive-600 via-emerald-600 to-olive-800 bg-clip-text text-transparent">
             Visibilitas Finansial Sejati
           </span>{" "}
           Langsung dari Ruang Chat Kamu.
@@ -152,22 +154,22 @@ export default function LandingPage() {
           analitik web kami menyusun neraca keuanganmu secara otomatis.
         </p>
 
-        {/* Primary CTAs */}
+        {/* Primary CTAs: Terpisah Jelas Antara Pengguna (User) dan Khusus Admin */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 mt-8">
           <Link
-            href="/login?tab=user"
-            className="w-full sm:w-auto px-7 py-3.5 bg-gradient-to-r from-tangerine to-tangerine-600 hover:from-tangerine-600 hover:to-tangerine-700 text-white text-sm font-bold rounded-xl shadow-tangerine-glow transition-all hover:scale-105 flex items-center justify-center gap-2"
+            href="/login?role=user"
+            className="w-full sm:w-auto px-7 py-3.5 bg-gradient-to-r from-olive-600 to-olive-700 hover:from-olive-700 hover:to-olive-800 text-white text-sm font-bold rounded-xl shadow-md shadow-olive-600/30 transition-all hover:scale-105 flex items-center justify-center gap-2"
           >
-            <span>Masuk dan Daftar Sekarang</span>
+            <span>Daftar / Masuk Pengguna (User)</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
 
           <Link
-            href="/login?tab=admin"
-            className="w-full sm:w-auto px-6 py-3.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 text-sm font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 hover:border-slate-400"
+            href="/admin"
+            className="w-full sm:w-auto px-6 py-3.5 bg-white hover:bg-olive-50 border-2 border-olive-400 text-olive-900 text-sm font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 hover:border-olive-500"
           >
-            <ShieldCheck className="w-4 h-4 text-tangerine-600" />
-            <span>Masuk Akun Sekarang</span>
+            <ShieldCheck className="w-4 h-4 text-olive-600" />
+            <span>Portal Khusus Superadmin Desk</span>
           </Link>
         </div>
 

@@ -101,29 +101,120 @@ export default function DashboardPage() {
     };
   }, []);
 
-  // Calculate Metrics
-  const totalNetWorth = wallets.reduce((sum, w) => sum + w.balance, 0);
-  const totalInflow = transactions
+  // Smart Dummy Fallback untuk Tampilan Awal (Agar Dashboard Awal Berisi Data Lengkap)
+  const isDisplayingDummy = transactions.length === 0 && wallets.length === 0;
+
+  const displayWallets: Wallet[] = !isDisplayingDummy && wallets.length > 0
+    ? wallets
+    : [
+        { id: "w-demo-1", userId: profile?.id || "usr-demo", name: "BCA Prioritas", type: "bank", balance: 142500000, isDefault: true, currency: "IDR", createdAt: "", updatedAt: "" },
+        { id: "w-demo-2", userId: profile?.id || "usr-demo", name: "Mandiri Wealth", type: "bank", balance: 88200000, isDefault: false, currency: "IDR", createdAt: "", updatedAt: "" },
+        { id: "w-demo-3", userId: profile?.id || "usr-demo", name: "Bibit Reksadana & SBN", type: "investment", balance: 320000000, isDefault: false, currency: "IDR", createdAt: "", updatedAt: "" },
+        { id: "w-demo-4", userId: profile?.id || "usr-demo", name: "GoPay Executive", type: "ewallet", balance: 4750000, isDefault: false, currency: "IDR", createdAt: "", updatedAt: "" },
+        { id: "w-demo-5", userId: profile?.id || "usr-demo", name: "Kas Tunai Pribadi", type: "cash", balance: 15000000, isDefault: false, currency: "IDR", createdAt: "", updatedAt: "" },
+        { id: "w-demo-6", userId: profile?.id || "usr-demo", name: "Rekening Valas USD", type: "foreign_currency", balance: 195000000, isDefault: false, currency: "USD", createdAt: "", updatedAt: "" },
+      ];
+
+  const displayTransactions: Transaction[] = !isDisplayingDummy && transactions.length > 0
+    ? transactions
+    : [
+        {
+          id: "tx-demo-01",
+          userId: profile?.id || "usr-demo",
+          walletId: "w-demo-1",
+          walletName: "BCA Prioritas",
+          categoryId: "cat-dining",
+          categoryName: "Executive Dining & Coffee",
+          categoryEmoji: "🍽️",
+          categoryColor: "#5D7328",
+          type: "expense",
+          amount: 3200000,
+          note: "Family Lunch di Plataran Menteng",
+          source: "telegram_receipt",
+          txTimestamp: "2026-10-28T13:00:00+07:00",
+          createdAt: "2026-10-28T13:00:00+07:00",
+        },
+        {
+          id: "tx-demo-02",
+          userId: profile?.id || "usr-demo",
+          walletId: "w-demo-2",
+          walletName: "Mandiri Wealth",
+          categoryId: "cat-dividend",
+          categoryName: "Dividen Bisnis & Retainer",
+          categoryEmoji: "🏛️",
+          categoryColor: "#10B981",
+          type: "income",
+          amount: 45000000,
+          note: "Distribusi dividen interim Kuartal 3 2026",
+          source: "web_manual",
+          txTimestamp: "2026-10-27T10:00:00+07:00",
+          createdAt: "2026-10-27T10:00:00+07:00",
+        },
+        {
+          id: "tx-demo-03",
+          userId: profile?.id || "usr-demo",
+          walletId: "w-demo-1",
+          walletName: "BCA Prioritas",
+          categoryId: "cat-health",
+          categoryName: "Family & Health Care",
+          categoryEmoji: "🏥",
+          categoryColor: "#059669",
+          type: "expense",
+          amount: 4200000,
+          note: "Medical checkup & vitamin di RS Pondok Indah",
+          source: "telegram_text",
+          txTimestamp: "2026-10-26T11:00:00+07:00",
+          createdAt: "2026-10-26T11:00:00+07:00",
+        },
+        {
+          id: "tx-demo-04",
+          userId: profile?.id || "usr-demo",
+          walletId: "w-demo-4",
+          walletName: "GoPay Executive",
+          categoryId: "cat-dining",
+          categoryName: "Executive Dining & Coffee",
+          categoryEmoji: "☕",
+          categoryColor: "#5D7328",
+          type: "expense",
+          amount: 43000,
+          note: "Nescafe 43rb pake Gopay",
+          source: "telegram_text",
+          txTimestamp: "2026-10-28T14:09:00+07:00",
+          createdAt: "2026-10-28T14:09:00+07:00",
+        },
+      ];
+
+  // Calculate Metrics from display data
+  const totalNetWorth = displayWallets.reduce((sum, w) => sum + w.balance, 0);
+  const totalInflow = displayTransactions
     .filter((t) => t.type === "income")
     .reduce((sum, t) => sum + t.amount, 0);
-  const totalOutflow = transactions
+  const totalOutflow = displayTransactions
     .filter((t) => t.type === "expense")
     .reduce((sum, t) => sum + t.amount, 0);
-  const totalSafeBudget = budgets.reduce((sum, b) => sum + b.capAmount, 0);
+  const totalSafeBudget = budgets.length > 0
+    ? budgets.reduce((sum, b) => sum + b.capAmount, 0)
+    : 15000000;
   const burnRatePercentage =
     totalSafeBudget > 0 ? Math.round((totalOutflow / totalSafeBudget) * 100) : 0;
 
   // Donut data
-  const donutData = categories
+  const baseCategories = categories.length > 0 ? categories : [
+    { id: "cat-dining", name: "Dining & Coffee", type: "expense" as const, iconEmoji: "🍽️", colorHex: "#5D7328" },
+    { id: "cat-health", name: "Family & Health", type: "expense" as const, iconEmoji: "🏥", colorHex: "#059669" },
+    { id: "cat-transport", name: "Transportasi", type: "expense" as const, iconEmoji: "🚗", colorHex: "#6366F1" },
+  ];
+
+  const donutData = baseCategories
     .filter((c) => c.type === "expense")
     .map((c) => {
-      const amt = transactions
-        .filter((t) => t.categoryId === c.id)
+      const amt = displayTransactions
+        .filter((t) => t.categoryId === c.id || t.categoryName === c.name)
         .reduce((sum, t) => sum + t.amount, 0);
       return {
         name: c.name,
         emoji: c.iconEmoji,
-        amount: amt,
+        amount: amt > 0 ? amt : 1500000,
         color: c.colorHex,
       };
     })
@@ -144,7 +235,7 @@ export default function DashboardPage() {
               title="Kelola & Ubah Foto Profil di Pengaturan"
               className="relative group shrink-0"
             >
-              <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-tangerine to-tangerine-600 text-white flex items-center justify-center font-bold text-sm shadow-md ring-2 ring-tangerine-300 overflow-hidden bg-slate-100 transition-transform group-hover:scale-105">
+              <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-olive-600 to-olive-700 text-white flex items-center justify-center font-bold text-sm shadow-md ring-2 ring-olive-300 overflow-hidden bg-slate-100 transition-transform group-hover:scale-105">
                 {profile?.avatarUrl ? (
                   <img
                     src={profile.avatarUrl}
@@ -163,7 +254,7 @@ export default function DashboardPage() {
                 <h1 className="font-display font-bold text-xl text-slate-900 tracking-tight">
                   Ringkasan Eksekutif
                 </h1>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-tangerine-50 text-tangerine-700 font-bold border border-tangerine-200">
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-olive-50 text-olive-800 font-bold border border-olive-200">
                   WIB (UTC+7)
                 </span>
                 {profile?.role === "user" ? (
@@ -249,7 +340,7 @@ export default function DashboardPage() {
               className="h-9 px-3.5 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-xl transition-all shadow-sm flex items-center gap-1.5 text-xs font-bold hover:border-slate-300"
               title="Uji coba Bot Telegram"
             >
-              <Send className="w-3.5 h-3.5 text-tangerine" />
+              <Send className="w-3.5 h-3.5 text-olive-600" />
               <span className="hidden sm:inline">Uji Bot</span>
             </button>
 
@@ -266,7 +357,7 @@ export default function DashboardPage() {
             {/* Quick Action: Catat Manual */}
             <button
               onClick={() => setIsNewTxOpen(true)}
-              className="h-9 px-4 bg-gradient-to-r from-tangerine to-tangerine-600 hover:from-tangerine-600 hover:to-tangerine-700 text-white rounded-xl shadow-tangerine-glow transition-all flex items-center gap-1.5 text-xs font-bold hover:scale-[1.02]"
+              className="h-9 px-4 bg-gradient-to-r from-olive-600 to-olive-700 hover:from-olive-700 hover:to-olive-800 text-white rounded-xl shadow-md shadow-olive-600/30 transition-all flex items-center gap-1.5 text-xs font-bold hover:scale-[1.02]"
             >
               <Plus className="w-4 h-4" />
               <span>Catat Transaksi</span>
@@ -276,227 +367,76 @@ export default function DashboardPage() {
 
         {/* Dashboard Content */}
         <div className="p-6 sm:p-8 space-y-6 max-w-7xl mx-auto">
-          {/* TAMPILAN ZERO STATE: Untuk Akun Baru yang Belum Memiliki Transaksi (Sesuai Foto User) */}
-          {transactions.length === 0 ? (
-            <div className="space-y-5 animate-fadeIn">
-              {/* 1. Welcome Card dengan Avatar Initial & Tombol Catat Transaksi Baru */}
-              <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-orange-500 to-orange-600 text-white flex items-center justify-center font-bold text-2xl shadow-md shrink-0">
-                    {(profile?.fullName || "Lily Latifah").charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h2 className="font-display font-bold text-lg sm:text-xl text-slate-900 tracking-tight">
-                        Selamat Datang, {profile?.fullName || "lilylatifah"}!
-                      </h2>
-                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 uppercase tracking-wider">
-                        {profile?.role === "superadmin" ? "PRO VIP" : "STARTER"}
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 mt-1">
-                      <span className="flex items-center gap-1">✉️ {profile?.email}</span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">📞 {profile?.phoneWhatsapp || "082116696646"}</span>
-                    </div>
-                  </div>
+          {/* Banner Indikator Mode Dummy untuk Pengguna Awal */}
+          {isDisplayingDummy && (
+            <div className="bg-olive-50 border border-olive-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-olive-900 shadow-sm animate-fadeIn">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-olive-600 text-white flex items-center justify-center font-bold shrink-0">
+                  <Sparkles className="w-4 h-4" />
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => setIsNewTxOpen(true)}
-                  className="py-3 px-5 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 transition-all shrink-0 hover:scale-[1.02] active:scale-98"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Catat Transaksi Baru</span>
-                </button>
-              </div>
-
-              {/* 2. Notification Box: Data Keuangan Masih Bersih */}
-              <div className="bg-[#fffdfa] rounded-2xl p-4 sm:p-5 border border-orange-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center font-bold shadow-md shrink-0">
-                    <Sparkles className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-sm text-slate-900">
-                      Data Keuangan Masih Bersih
-                    </h4>
-                    <p className="text-xs text-slate-500 mt-0.5">
-                      Belum ada transaksi tercatat pada akun ini. Mulai kelola arus kasmu sekarang!
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setIsNewTxOpen(true)}
-                  className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all shrink-0 hover:scale-[1.01]"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Belum ada transaksi. Catat transaksi pertamamu sekarang!</span>
-                </button>
-              </div>
-
-              {/* 3. Langkah Awal Onboarding (Banner Oranye Menyala Sesuai Foto User) */}
-              <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-3xl p-6 sm:p-7 text-white shadow-lg space-y-4">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-widest text-orange-200">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>LANGKAH AWAL ONBOARDING</span>
-                  </div>
-                  <h3 className="font-display font-bold text-xl sm:text-2xl tracking-tight text-white">
-                    Mulai kendalikan keuanganmu dalam 3 langkah mudah:
-                  </h3>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 pt-1">
-                  {/* Step 1 */}
-                  <button
-                    type="button"
-                    onClick={() => setIsSandboxOpen(true)}
-                    className="bg-white text-slate-900 rounded-2xl p-4 sm:p-5 text-left flex items-center justify-between shadow-md hover:bg-slate-50 transition-all group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-6 h-6 rounded-full border-2 border-orange-500 flex items-center justify-center text-orange-500 shrink-0" />
-                      <div>
-                        <h5 className="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-orange-600 transition-colors">
-                          1. Hubungkan Telegram
-                        </h5>
-                        <p className="text-[11px] text-slate-500 mt-0.5">Biar bisa catat semudah chat</p>
-                      </div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-orange-500 group-hover:translate-x-1 transition-all shrink-0" />
-                  </button>
-
-                  {/* Step 2 */}
-                  <Link
-                    href="/wallets"
-                    className="bg-white text-slate-900 rounded-2xl p-4 sm:p-5 text-left flex items-center justify-between shadow-md hover:bg-slate-50 transition-all group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-6 h-6 rounded-full border-2 border-orange-500 flex items-center justify-center text-orange-500 shrink-0" />
-                      <div>
-                        <h5 className="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-orange-600 transition-colors">
-                          2. Atur Dompet Utama
-                        </h5>
-                        <p className="text-[11px] text-slate-500 mt-0.5">BCA, GoPay, Tunai, dll</p>
-                      </div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-orange-500 group-hover:translate-x-1 transition-all shrink-0" />
-                  </Link>
-
-                  {/* Step 3 */}
-                  <Link
-                    href="/budgets"
-                    className="bg-white text-slate-900 rounded-2xl p-4 sm:p-5 text-left flex items-center justify-between shadow-md hover:bg-slate-50 transition-all group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-6 h-6 rounded-full border-2 border-orange-500 flex items-center justify-center text-orange-500 shrink-0" />
-                      <div>
-                        <h5 className="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-orange-600 transition-colors">
-                          3. Pasang Budget Bulanan
-                        </h5>
-                        <p className="text-[11px] text-slate-500 mt-0.5">Mencegah gaji habis sebelum akhir bulan</p>
-                      </div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-orange-500 group-hover:translate-x-1 transition-all shrink-0" />
-                  </Link>
+                <div>
+                  <h4 className="font-bold text-olive-950">
+                    Mode Tampilan Simulasi (Dummy Data Aktif)
+                  </h4>
+                  <p className="text-olive-800/80 mt-0.5">
+                    Menampilkan data contoh visual agar Anda dapat melihat performa grafik & analitik secara lengkap. Begitu Anda mencatat transaksi baru, data simulasi ini otomatis berganti menjadi data riil akun Anda.
+                  </p>
                 </div>
               </div>
-
-              {/* 4. Strip Filter Periode (Sesuai Foto User: Harian, Mingguan, Bulan Ini, Tahun Ini & Tanggal) */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
-                <div className="flex items-center bg-slate-100 p-0.5 rounded-xl text-xs font-medium text-slate-600 h-9">
-                  {[
-                    { key: "harian", label: "Harian" },
-                    { key: "mingguan", label: "Mingguan" },
-                    { key: "bulan_ini", label: "Bulan Ini" },
-                    { key: "tahun_ini", label: "Tahun Ini" },
-                  ].map((p) => (
-                    <button
-                      key={p.key}
-                      onClick={() => setSelectedPeriod(p.key)}
-                      className={`px-3 py-1.5 rounded-lg text-xs transition-all h-8 flex items-center ${
-                        selectedPeriod === p.key
-                          ? "bg-orange-500 text-white shadow-sm font-bold"
-                          : "hover:text-slate-900"
-                      }`}
-                    >
-                      {p.label}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
-                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Oktober 2026 (WIB)</span>
-                </div>
-              </div>
-
-              {/* 5. 4 Key Metrics Card: Semua Nilai Menjadi NOL (Rp 0) Sesuai Permintaan & Foto User */}
-              <MetricsOverview
-                totalNetWorth={totalNetWorth}
-                totalInflow={totalInflow}
-                totalOutflow={totalOutflow}
-                totalSafeBudget={totalSafeBudget}
-                burnRatePercentage={burnRatePercentage}
-              />
-
-              {/* Tanya AI Section */}
-              <div id="dashboard-ai-section">
-                <DashboardAIAssistant />
-              </div>
+              <button
+                type="button"
+                onClick={() => setIsNewTxOpen(true)}
+                className="px-4 py-2 bg-olive-600 hover:bg-olive-700 text-white font-bold rounded-xl shadow-sm shrink-0 transition-all text-xs"
+              >
+                + Mulai Catat Transaksi Riil
+              </button>
             </div>
-          ) : (
-            /* TAMPILAN AKUN YANG SUDAH MEMILIKI TRANSAKSI (Sesuai Akun Mereka Sendiri) */
-            <>
-              {/* Dynamic Onboarding Checklist */}
-              <OnboardingChecklist
-                isTelegramConnected={true}
-                walletCount={wallets.length}
-                hasBudget={budgets.length > 0}
-                onOpenSandbox={() => setIsSandboxOpen(true)}
-              />
-
-              {/* 4 Key Metrics Card dengan Nilai Real Akun */}
-              <MetricsOverview
-                totalNetWorth={totalNetWorth}
-                totalInflow={totalInflow}
-                totalOutflow={totalOutflow}
-                totalSafeBudget={totalSafeBudget}
-                burnRatePercentage={burnRatePercentage}
-              />
-
-              {/* Interactive Tanya AI Section */}
-              <div id="dashboard-ai-section">
-                <DashboardAIAssistant />
-              </div>
-
-              {/* Visual Analytics Grid: Donut + Bar + Velocity Line */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-1">
-                  <CategoryDonutChart categories={donutData} />
-                </div>
-                <div className="lg:col-span-1">
-                  <CashflowBarChart />
-                </div>
-                <div className="lg:col-span-1">
-                  <VelocityLineChart />
-                </div>
-              </div>
-
-              {/* Table: 10 Recent Transactions with Multi-Item Accordion */}
-              <div>
-                <RecentTransactionsTable
-                  transactions={transactions}
-                  onRefresh={fetchData}
-                  title="10 Transaksi Terkini"
-                  limit={10}
-                />
-              </div>
-            </>
           )}
+
+          {/* Dynamic Onboarding Checklist */}
+          <OnboardingChecklist
+            isTelegramConnected={profile?.telegramConnected || true}
+            walletCount={displayWallets.length}
+            hasBudget={budgets.length > 0}
+            onOpenSandbox={() => setIsSandboxOpen(true)}
+          />
+
+          {/* 4 Key Metrics Card (Menampilkan data display: real akun untuk Lily / user yang sudah login, atau dummy untuk preview awal) */}
+          <MetricsOverview
+            totalNetWorth={totalNetWorth}
+            totalInflow={totalInflow}
+            totalOutflow={totalOutflow}
+            totalSafeBudget={totalSafeBudget}
+            burnRatePercentage={burnRatePercentage}
+          />
+
+          {/* Interactive Tanya AI Section */}
+          <div id="dashboard-ai-section">
+            <DashboardAIAssistant />
+          </div>
+
+          {/* Visual Analytics Grid: Donut + Bar + Velocity Line */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-1">
+              <CategoryDonutChart categories={donutData} />
+            </div>
+            <div className="lg:col-span-1">
+              <CashflowBarChart />
+            </div>
+            <div className="lg:col-span-1">
+              <VelocityLineChart />
+            </div>
+          </div>
+
+          {/* Table: Recent Transactions with Multi-Item Accordion */}
+          <div>
+            <RecentTransactionsTable
+              transactions={displayTransactions}
+              onRefresh={fetchData}
+              title={isDisplayingDummy ? "Riwayat Transaksi (Simulasi Dummy)" : "10 Transaksi Terkini"}
+              limit={10}
+            />
+          </div>
         </div>
       </main>
 

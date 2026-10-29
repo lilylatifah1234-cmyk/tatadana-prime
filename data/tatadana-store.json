@@ -10,8 +10,8 @@
     "telegramConnected": true,
     "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80",
     "createdAt": "2026-10-15T09:00:00+07:00",
-    "updatedAt": "2026-10-21T04:21:38.591Z",
-    "telegramChatId": 782194821
+    "updatedAt": "2026-10-28T07:13:35.557Z",
+    "telegramChatId": 8745100924
   },
   "wallets": [
     {
@@ -52,7 +52,7 @@
       "userId": "usr-lily-001",
       "name": "GoPay & OVO Executive",
       "type": "ewallet",
-      "balance": 4250000,
+      "balance": 4207000,
       "isDefault": false,
       "currency": "IDR",
       "createdAt": "2026-01-15T08:25:00+07:00",
@@ -166,6 +166,24 @@
     }
   ],
   "transactions": [
+    {
+      "id": "tx-1793171381337",
+      "userId": "usr-lily-001",
+      "walletId": "w-gopay-exec",
+      "walletName": "GoPay & OVO Executive",
+      "categoryId": "cat-dining",
+      "categoryName": "Executive Dining & Coffee",
+      "categoryEmoji": "🍽️",
+      "categoryColor": "#0284C7",
+      "type": "expense",
+      "amount": 43000,
+      "adminFee": 0,
+      "note": "nescafe 43rb pake gopay",
+      "source": "telegram_text",
+      "items": [],
+      "txTimestamp": "2026-10-28T07:09:41.338Z",
+      "createdAt": "2026-10-28T07:09:41.338Z"
+    },
     {
       "id": "tx-1792556498759",
       "userId": "usr-lily-001",
@@ -487,7 +505,7 @@
     "userId": "usr-lily-001",
     "planType": "pro",
     "status": "active",
-    "monthlyTxCount": 30,
+    "monthlyTxCount": 31,
     "txQuota": -1,
     "expiredAt": "2027-10-12T00:00:00+07:00",
     "resetAt": "2026-11-01T00:00:00+07:00"
@@ -521,6 +539,17 @@
     }
   ],
   "aiLogs": [
+    {
+      "id": "ai-1793171381304",
+      "createdAt": "2026-10-28T07:09:41.304Z",
+      "provider": "fallback",
+      "model": "tatadana-enterprise-parser-v2",
+      "actionType": "text_parse",
+      "promptTokens": 250,
+      "completionTokens": 60,
+      "latencyMs": 45,
+      "estimatedCostUsd": 0.0001
+    },
     {
       "id": "ai-1792556498675",
       "createdAt": "2026-10-21T04:21:38.675Z",
@@ -617,6 +646,72 @@
     }
   ],
   "adminLogs": [
+    {
+      "id": "adm-1793171407624",
+      "createdAt": "2026-10-28T07:10:07.624Z",
+      "adminId": "adm-root-001",
+      "adminName": "Owner Lily Latifah",
+      "targetUserId": "usr-lily-001",
+      "targetUserName": "Lily Latifah",
+      "action": "SUPERADMIN_LOGIN_PRO_VIP",
+      "reason": "Autentikasi Owner Lily Latifah berhasil dengan paket PRO VIP",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "adm-1792764740439",
+      "adminId": "adm-root-001",
+      "adminName": "Superadmin Lily Latifah",
+      "targetUserId": "usr-demo-siti",
+      "targetUserName": "Siti Rahmawati (Founder Kopi Senja)",
+      "action": "REJECT_USER_REGISTRATION",
+      "reason": "Verifikasi data profil tidak memenuhi syarat",
+      "ipAddress": "127.0.0.1",
+      "createdAt": "2026-10-23T14:12:20.439Z"
+    },
+    {
+      "id": "adm-1792764588644",
+      "createdAt": "2026-10-23T14:09:48.644Z",
+      "adminId": "adm-root-001",
+      "adminName": "Owner Lily Latifah",
+      "targetUserId": "usr-lily-001",
+      "targetUserName": "Lily Latifah",
+      "action": "SUPERADMIN_LOGIN_PRO_VIP",
+      "reason": "Autentikasi Owner Lily Latifah berhasil dengan paket PRO VIP",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "adm-1792764179167",
+      "createdAt": "2026-10-23T14:02:59.167Z",
+      "adminId": "adm-root-001",
+      "adminName": "Owner Lily Latifah",
+      "targetUserId": "usr-lily-001",
+      "targetUserName": "Lily Latifah",
+      "action": "SUPERADMIN_LOGIN_PRO_VIP",
+      "reason": "Autentikasi Owner Lily Latifah berhasil dengan paket PRO VIP",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "adm-1792764125642",
+      "createdAt": "2026-10-23T14:02:05.642Z",
+      "adminId": "adm-root-001",
+      "adminName": "Owner Lily Latifah",
+      "targetUserId": "usr-lily-001",
+      "targetUserName": "Lily Latifah",
+      "action": "SUPERADMIN_LOGIN_PRO_VIP",
+      "reason": "Autentikasi Owner Lily Latifah berhasil dengan paket PRO VIP",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "adm-1792752652041",
+      "createdAt": "2026-10-23T10:50:52.041Z",
+      "adminId": "adm-root-001",
+      "adminName": "Owner Lily Latifah",
+      "targetUserId": "usr-lily-001",
+      "targetUserName": "Lily Latifah",
+      "action": "SUPERADMIN_LOGIN_PRO_VIP",
+      "reason": "Autentikasi Owner Lily Latifah berhasil dengan paket PRO VIP",
+      "ipAddress": "127.0.0.1"
+    },
     {
       "id": "adm-1792249635532",
       "createdAt": "2026-10-17T15:07:15.532Z",
@@ -1166,11 +1261,11 @@
       "role": "superadmin",
       "approvalStatus": "approved",
       "defaultCurrency": "IDR",
-      "telegramChatId": 782194821,
+      "telegramChatId": 8745100924,
       "telegramConnected": true,
       "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80",
       "createdAt": "2026-01-15T08:00:00+07:00",
-      "updatedAt": "2026-10-21T04:21:38.593Z"
+      "updatedAt": "2026-10-28T07:13:35.558Z"
     },
     {
       "id": "usr-demo-budi",
@@ -1203,11 +1298,12 @@
       "email": "siti.rahma@kopisenja.com",
       "phoneWhatsapp": "+6281311223344",
       "role": "user",
-      "approvalStatus": "pending",
+      "approvalStatus": "rejected",
       "defaultCurrency": "IDR",
       "telegramConnected": false,
       "createdAt": "2026-10-17T08:15:00+07:00",
-      "updatedAt": "2026-10-17T08:15:00+07:00"
+      "updatedAt": "2026-10-23T14:12:20.439Z",
+      "rejectionReason": "Verifikasi data profil tidak memenuhi syarat"
     }
   ]
 }
