@@ -89,7 +89,7 @@ export function CategoryDonutChart({ categories }: CategoryDonutChartProps) {
                 <span className="text-[11px] font-bold text-slate-900 max-w-[100px] truncate">
                   {categories[hoveredIdx].name}
                 </span>
-                <span className="text-xs font-bold text-tangerine-600 tabular-nums">
+                <span className="text-xs font-bold text-olive-700 tabular-nums">
                   {totalAmount > 0
                     ? Math.round((categories[hoveredIdx].amount / totalAmount) * 100)
                     : 0}
@@ -112,36 +112,42 @@ export function CategoryDonutChart({ categories }: CategoryDonutChartProps) {
 
         {/* Legend List */}
         <div className="flex-1 w-full space-y-2">
-          {categories.map((cat, idx) => {
-            const percentage = totalAmount > 0 ? Math.round((cat.amount / totalAmount) * 100) : 0;
-            const isHovered = hoveredIdx === idx;
+          {categories.length === 0 ? (
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 text-center text-xs text-slate-400">
+              Belum ada data pengeluaran (Rp 0). Kategori akan terisi otomatis setelah transaksi diinput.
+            </div>
+          ) : (
+            categories.map((cat, idx) => {
+              const percentage = totalAmount > 0 ? Math.round((cat.amount / totalAmount) * 100) : 0;
+              const isHovered = hoveredIdx === idx;
 
-            return (
-              <div
-                key={cat.name}
-                onMouseEnter={() => setHoveredIdx(idx)}
-                onMouseLeave={() => setHoveredIdx(null)}
-                className={`flex items-center justify-between p-2 rounded-xl text-xs transition-all cursor-pointer ${
-                  isHovered ? "bg-slate-100/80 scale-[1.02]" : "hover:bg-slate-50"
-                }`}
-              >
-                <div className="flex items-center gap-2 min-w-0">
-                  <span
-                    className="w-2.5 h-2.5 rounded-full shrink-0"
-                    style={{ backgroundColor: cat.color }}
-                  />
-                  <span className="text-sm shrink-0">{cat.emoji}</span>
-                  <span className="font-medium text-slate-800 truncate">{cat.name}</span>
-                </div>
-                <div className="text-right shrink-0 pl-2">
-                  <div className="font-bold text-slate-900 tabular-nums">
-                    {formatRupiah(cat.amount)}
+              return (
+                <div
+                  key={cat.name}
+                  onMouseEnter={() => setHoveredIdx(idx)}
+                  onMouseLeave={() => setHoveredIdx(null)}
+                  className={`flex items-center justify-between p-2 rounded-xl text-xs transition-all cursor-pointer ${
+                    isHovered ? "bg-slate-100/80 scale-[1.02]" : "hover:bg-slate-50"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span
+                      className="w-2.5 h-2.5 rounded-full shrink-0"
+                      style={{ backgroundColor: cat.color }}
+                    />
+                    <span className="text-sm shrink-0">{cat.emoji}</span>
+                    <span className="font-medium text-slate-800 truncate">{cat.name}</span>
                   </div>
-                  <div className="text-[10px] text-slate-400 tabular-nums">{percentage}%</div>
+                  <div className="text-right shrink-0 pl-2">
+                    <div className="font-bold text-slate-900 tabular-nums">
+                      {formatRupiah(cat.amount)}
+                    </div>
+                    <div className="text-[10px] text-slate-400 tabular-nums">{percentage}%</div>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </div>
     </div>

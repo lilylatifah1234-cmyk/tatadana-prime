@@ -101,124 +101,40 @@ export default function DashboardPage() {
     };
   }, []);
 
-  // Smart Dummy Fallback untuk Tampilan Awal (Agar Dashboard Awal Berisi Data Lengkap)
-  const isDisplayingDummy = transactions.length === 0 && wallets.length === 0;
-
-  const displayWallets: Wallet[] = !isDisplayingDummy && wallets.length > 0
-    ? wallets
-    : [
-        { id: "w-demo-1", userId: profile?.id || "usr-demo", name: "BCA Prioritas", type: "bank", balance: 142500000, isDefault: true, currency: "IDR", createdAt: "", updatedAt: "" },
-        { id: "w-demo-2", userId: profile?.id || "usr-demo", name: "Mandiri Wealth", type: "bank", balance: 88200000, isDefault: false, currency: "IDR", createdAt: "", updatedAt: "" },
-        { id: "w-demo-3", userId: profile?.id || "usr-demo", name: "Bibit Reksadana & SBN", type: "investment", balance: 320000000, isDefault: false, currency: "IDR", createdAt: "", updatedAt: "" },
-        { id: "w-demo-4", userId: profile?.id || "usr-demo", name: "GoPay Executive", type: "ewallet", balance: 4750000, isDefault: false, currency: "IDR", createdAt: "", updatedAt: "" },
-        { id: "w-demo-5", userId: profile?.id || "usr-demo", name: "Kas Tunai Pribadi", type: "cash", balance: 15000000, isDefault: false, currency: "IDR", createdAt: "", updatedAt: "" },
-        { id: "w-demo-6", userId: profile?.id || "usr-demo", name: "Rekening Valas USD", type: "foreign_currency", balance: 195000000, isDefault: false, currency: "USD", createdAt: "", updatedAt: "" },
-      ];
-
-  const displayTransactions: Transaction[] = !isDisplayingDummy && transactions.length > 0
-    ? transactions
-    : [
-        {
-          id: "tx-demo-01",
-          userId: profile?.id || "usr-demo",
-          walletId: "w-demo-1",
-          walletName: "BCA Prioritas",
-          categoryId: "cat-dining",
-          categoryName: "Executive Dining & Coffee",
-          categoryEmoji: "🍽️",
-          categoryColor: "#5D7328",
-          type: "expense",
-          amount: 3200000,
-          note: "Family Lunch di Plataran Menteng",
-          source: "telegram_receipt",
-          txTimestamp: "2026-10-28T13:00:00+07:00",
-          createdAt: "2026-10-28T13:00:00+07:00",
-        },
-        {
-          id: "tx-demo-02",
-          userId: profile?.id || "usr-demo",
-          walletId: "w-demo-2",
-          walletName: "Mandiri Wealth",
-          categoryId: "cat-dividend",
-          categoryName: "Dividen Bisnis & Retainer",
-          categoryEmoji: "🏛️",
-          categoryColor: "#10B981",
-          type: "income",
-          amount: 45000000,
-          note: "Distribusi dividen interim Kuartal 3 2026",
-          source: "web_manual",
-          txTimestamp: "2026-10-27T10:00:00+07:00",
-          createdAt: "2026-10-27T10:00:00+07:00",
-        },
-        {
-          id: "tx-demo-03",
-          userId: profile?.id || "usr-demo",
-          walletId: "w-demo-1",
-          walletName: "BCA Prioritas",
-          categoryId: "cat-health",
-          categoryName: "Family & Health Care",
-          categoryEmoji: "🏥",
-          categoryColor: "#059669",
-          type: "expense",
-          amount: 4200000,
-          note: "Medical checkup & vitamin di RS Pondok Indah",
-          source: "telegram_text",
-          txTimestamp: "2026-10-26T11:00:00+07:00",
-          createdAt: "2026-10-26T11:00:00+07:00",
-        },
-        {
-          id: "tx-demo-04",
-          userId: profile?.id || "usr-demo",
-          walletId: "w-demo-4",
-          walletName: "GoPay Executive",
-          categoryId: "cat-dining",
-          categoryName: "Executive Dining & Coffee",
-          categoryEmoji: "☕",
-          categoryColor: "#5D7328",
-          type: "expense",
-          amount: 43000,
-          note: "Nescafe 43rb pake Gopay",
-          source: "telegram_text",
-          txTimestamp: "2026-10-28T14:09:00+07:00",
-          createdAt: "2026-10-28T14:09:00+07:00",
-        },
-      ];
-
-  // Calculate Metrics from display data
-  const totalNetWorth = displayWallets.reduce((sum, w) => sum + w.balance, 0);
-  const totalInflow = displayTransactions
+  // Data riil: hitung metrik langsung dari database / input user (NOL secara default)
+  const totalNetWorth = wallets.reduce((sum, w) => sum + (Number(w.balance) || 0), 0);
+  const totalInflow = transactions
     .filter((t) => t.type === "income")
     .reduce((sum, t) => sum + t.amount, 0);
-  const totalOutflow = displayTransactions
+  const totalOutflow = transactions
     .filter((t) => t.type === "expense")
     .reduce((sum, t) => sum + t.amount, 0);
   const totalSafeBudget = budgets.length > 0
     ? budgets.reduce((sum, b) => sum + b.capAmount, 0)
-    : 15000000;
+    : 0;
   const burnRatePercentage =
     totalSafeBudget > 0 ? Math.round((totalOutflow / totalSafeBudget) * 100) : 0;
 
-  // Donut data
-  const baseCategories = categories.length > 0 ? categories : [
-    { id: "cat-dining", name: "Dining & Coffee", type: "expense" as const, iconEmoji: "🍽️", colorHex: "#5D7328" },
-    { id: "cat-health", name: "Family & Health", type: "expense" as const, iconEmoji: "🏥", colorHex: "#059669" },
-    { id: "cat-transport", name: "Transportasi", type: "expense" as const, iconEmoji: "🚗", colorHex: "#6366F1" },
-  ];
+  // Distribusi Pengeluaran Kategori (Donut Chart) dihitung riil dari transaksi
+  const expenseTransactions = transactions.filter((t) => t.type === "expense");
+  const categorySpendingMap = new Map<string, { name: string; emoji: string; color: string; amount: number }>();
 
-  const donutData = baseCategories
-    .filter((c) => c.type === "expense")
-    .map((c) => {
-      const amt = displayTransactions
-        .filter((t) => t.categoryId === c.id || t.categoryName === c.name)
-        .reduce((sum, t) => sum + t.amount, 0);
-      return {
-        name: c.name,
-        emoji: c.iconEmoji,
-        amount: amt > 0 ? amt : 1500000,
-        color: c.colorHex,
-      };
-    })
-    .filter((c) => c.amount > 0);
+  expenseTransactions.forEach((t) => {
+    const key = t.categoryId || t.categoryName || "Lainnya";
+    const existing = categorySpendingMap.get(key);
+    if (existing) {
+      existing.amount += t.amount;
+    } else {
+      categorySpendingMap.set(key, {
+        name: t.categoryName || "Lainnya",
+        emoji: t.categoryEmoji || "🏷️",
+        color: t.categoryColor || "#5D7328",
+        amount: t.amount,
+      });
+    }
+  });
+
+  const donutData = Array.from(categorySpendingMap.values());
 
   return (
     <div className="flex min-h-screen bg-ivory">
@@ -367,41 +283,15 @@ export default function DashboardPage() {
 
         {/* Dashboard Content */}
         <div className="p-6 sm:p-8 space-y-6 max-w-7xl mx-auto">
-          {/* Banner Indikator Mode Dummy untuk Pengguna Awal */}
-          {isDisplayingDummy && (
-            <div className="bg-olive-50 border border-olive-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-olive-900 shadow-sm animate-fadeIn">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-olive-600 text-white flex items-center justify-center font-bold shrink-0">
-                  <Sparkles className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-olive-950">
-                    Mode Tampilan Simulasi (Dummy Data Aktif)
-                  </h4>
-                  <p className="text-olive-800/80 mt-0.5">
-                    Menampilkan data contoh visual agar Anda dapat melihat performa grafik & analitik secara lengkap. Begitu Anda mencatat transaksi baru, data simulasi ini otomatis berganti menjadi data riil akun Anda.
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsNewTxOpen(true)}
-                className="px-4 py-2 bg-olive-600 hover:bg-olive-700 text-white font-bold rounded-xl shadow-sm shrink-0 transition-all text-xs"
-              >
-                + Mulai Catat Transaksi Riil
-              </button>
-            </div>
-          )}
-
           {/* Dynamic Onboarding Checklist */}
           <OnboardingChecklist
             isTelegramConnected={profile?.telegramConnected || true}
-            walletCount={displayWallets.length}
+            walletCount={wallets.length}
             hasBudget={budgets.length > 0}
             onOpenSandbox={() => setIsSandboxOpen(true)}
           />
 
-          {/* 4 Key Metrics Card (Menampilkan data display: real akun untuk Lily / user yang sudah login, atau dummy untuk preview awal) */}
+          {/* 4 Key Metrics Card */}
           <MetricsOverview
             totalNetWorth={totalNetWorth}
             totalInflow={totalInflow}
@@ -421,19 +311,19 @@ export default function DashboardPage() {
               <CategoryDonutChart categories={donutData} />
             </div>
             <div className="lg:col-span-1">
-              <CashflowBarChart />
+              <CashflowBarChart transactions={transactions} />
             </div>
             <div className="lg:col-span-1">
-              <VelocityLineChart />
+              <VelocityLineChart transactions={transactions} />
             </div>
           </div>
 
           {/* Table: Recent Transactions with Multi-Item Accordion */}
           <div>
             <RecentTransactionsTable
-              transactions={displayTransactions}
+              transactions={transactions}
               onRefresh={fetchData}
-              title={isDisplayingDummy ? "Riwayat Transaksi (Simulasi Dummy)" : "10 Transaksi Terkini"}
+              title="10 Transaksi Terkini"
               limit={10}
             />
           </div>
