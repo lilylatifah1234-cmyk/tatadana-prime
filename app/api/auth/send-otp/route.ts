@@ -39,8 +39,6 @@ export async function POST(req: NextRequest) {
     let matchedPassword = "user123#";
     if (identifier.includes("lilylatifah") || identifier.includes("082116696646")) {
       matchedPassword = "lily1234#";
-    } else if (identifier.includes("budi")) {
-      matchedPassword = "budi123#";
     } else if (rawEmail.includes("@")) {
       matchedPassword = `${rawEmail.split("@")[0]}123#`;
     }

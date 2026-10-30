@@ -531,25 +531,36 @@ export default function SuperadminPage() {
                   Gunakan tombol di bawah untuk beralih sesi secara instan. Ketika masuk sebagai <strong>User Biasa</strong>, menu "Superadmin Desk" akan otomatis hilang dari Sidebar dan akses ke <code>/admin</code> akan diblokir dengan halaman 403 Forbidden.
                 </p>
                 <div className="flex flex-wrap gap-2.5 pt-1">
-                  <button
-                    onClick={() => handleSwitchSession("usr-demo-naftaly")}
-                    className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white text-xs font-bold flex items-center gap-1.5 transition-all"
-                  >
-                    <span>Masuk Sesi Pengguna: Naftaly (Approved User)</span>
-                  </button>
-                  <button
-                    onClick={() => handleSwitchSession("usr-demo-budi")}
-                    className="px-3.5 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-bold flex items-center gap-1.5 transition-all"
-                  >
-                    <span>Masuk Sesi Pengguna: Budi (Pending User)</span>
-                  </button>
-                  <button
-                    onClick={() => handleSwitchSession("usr-lily-001")}
-                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-tangerine to-tangerine-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-tangerine-glow transition-all"
-                  >
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    <span>Kembali ke Superadmin (Lily Latifah)</span>
-                  </button>
+                  {registeredUsers.filter((u) => u.id !== "usr-lily-001" && u.role !== "superadmin").length === 0 ? (
+                    <span className="text-xs text-slate-400 italic py-1">
+                      Belum ada pengguna terdaftar baru. Ketika user baru mendaftar dari formulir pendaftaran, akun mereka akan muncul di sini untuk peninjauan.
+                    </span>
+                  ) : (
+                    registeredUsers
+                      .filter((u) => u.id !== "usr-lily-001" && u.role !== "superadmin")
+                      .map((u) => (
+                        <button
+                          key={u.id}
+                          onClick={() => handleSwitchSession(u.id)}
+                          className={`px-3.5 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all ${
+                            activeProfile?.id === u.id
+                              ? "bg-emerald-600/30 border-emerald-500 text-emerald-300"
+                              : "bg-slate-800 hover:bg-slate-700 border-slate-600 text-white"
+                          }`}
+                        >
+                          <span>Masuk Sesi: {u.fullName} ({(u.approvalStatus || "pending").toUpperCase()})</span>
+                        </button>
+                      ))
+                  )}
+                  {activeProfile?.id !== "usr-lily-001" && (
+                    <button
+                      onClick={() => handleSwitchSession("usr-lily-001")}
+                      className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-tangerine to-tangerine-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-tangerine-glow transition-all"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <span>Kembali ke Superadmin (Lily Latifah)</span>
+                    </button>
+                  )}
                 </div>
               </div>
 

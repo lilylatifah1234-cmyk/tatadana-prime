@@ -102,7 +102,6 @@ export async function POST(req: NextRequest) {
       // Default password fallback untuk akun seed demo
       const prefix = targetUser.email.split("@")[0].toLowerCase();
       passwordMatches =
-        rawPassword === "budi123#" ||
         rawPassword === "user123#" ||
         rawPassword === "47893" ||
         rawPassword.toLowerCase() === `${prefix}123#`;

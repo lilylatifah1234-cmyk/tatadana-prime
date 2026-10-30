@@ -14,7 +14,6 @@ import { TelegramSandboxModal } from "@/components/TelegramSandboxModal";
 import { NewTransactionModal } from "@/components/NewTransactionModal";
 import { WalletTransferModal } from "@/components/WalletTransferModal";
 import { DashboardAIAssistant } from "@/components/DashboardAIAssistant";
-import { RoleSwitcher } from "@/components/RoleSwitcher";
 import {
   Plus,
   ArrowRight,
@@ -155,14 +154,14 @@ export default function DashboardPage() {
                 {profile?.avatarUrl ? (
                   <img
                     src={profile.avatarUrl}
-                    alt={profile?.fullName || "Lily Latifah"}
+                    alt={profile?.fullName || "Pengguna"}
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       (e.target as HTMLElement).style.display = "none";
                     }}
                   />
                 ) : null}
-                <span>{(profile?.fullName || "Lily Latifah").charAt(0).toUpperCase()}</span>
+                <span>{(profile?.fullName || "Pengguna").charAt(0).toUpperCase()}</span>
               </div>
             </Link>
             <div>
@@ -173,38 +172,14 @@ export default function DashboardPage() {
                 <span className="text-xs px-2.5 py-0.5 rounded-full bg-olive-50 text-olive-800 font-bold border border-olive-200">
                   WIB (UTC+7)
                 </span>
-                {profile?.role === "user" ? (
-                  <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 flex items-center gap-1.5 shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    POV USER BIASA
-                  </span>
-                ) : (
-                  <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-bold border border-indigo-200 flex items-center gap-1.5 shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
-                    SUPERADMIN POV
-                  </span>
-                )}
               </div>
               <p className="text-xs text-slate-500 mt-0.5">
-                Selamat datang kembali, <strong className="text-slate-800">{profile?.fullName || "Lily Latifah"}</strong>.{" "}
-                {profile?.role === "user" ? (
-                  <span className="text-emerald-600 font-medium">(Tampilan Mode Pengguna Standar — Superadmin Desk tersembunyi)</span>
-                ) : (
-                  <span className="text-indigo-600 font-medium">(Akses Superadmin Aktif — Kelola User & Kontrol Penuh)</span>
-                )}
+                Selamat datang kembali, <strong className="text-slate-800">{profile?.fullName || "Pengguna"}</strong>.
               </p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
-            {/* Developer Role Switcher (Admin vs User) */}
-            <RoleSwitcher
-              currentRole={profile?.role || "superadmin"}
-              onRoleChange={(newRole) => {
-                setProfile((prev) => (prev ? { ...prev, role: newRole } : null));
-              }}
-            />
-
             {/* Filter Periode Pills */}
             <div className="flex items-center bg-slate-100 p-0.5 rounded-xl text-xs font-medium text-slate-600 h-9">
               {[

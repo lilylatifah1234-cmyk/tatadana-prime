@@ -139,11 +139,11 @@ export function Sidebar({ onOpenSandbox, profile: propProfile }: SidebarProps) {
     { name: "Landing Page", href: "/", icon: Globe },
   ];
 
-  const displayName = profile?.fullName || "Lily Latifah";
-  const displayEmail = profile?.email || "lilylatifah1234@gmail.com";
-  const initial = displayName.charAt(0).toUpperCase() || "L";
+  const displayName = profile?.fullName || (isAdmin ? "Lily Latifah" : "Pengguna");
+  const displayEmail = profile?.email || (isAdmin ? "lilylatifah1234@gmail.com" : "");
+  const initial = displayName.charAt(0).toUpperCase() || (isAdmin ? "L" : "P");
   const planLabel = subscription?.planType === "lifetime" ? "LIFETIME VIP" : "PRO VIP";
-  const roleLabel = profile?.role ? profile.role.toUpperCase() : "SUPERADMIN";
+  const roleLabel = isAdmin ? (profile?.role === "superadmin" ? "SUPERADMIN" : "ADMIN") : "MEMBER";
 
   return (
     <>
@@ -290,7 +290,7 @@ export function Sidebar({ onOpenSandbox, profile: propProfile }: SidebarProps) {
             <button
               type="button"
               onClick={() =>
-                alert("Fitur Upgrade Pro: Silakan hubungi Administrator (Lily Latifah) untuk aktivasi lisensi PRO VIP.")
+                alert("Fitur Upgrade Pro: Silakan hubungi Administrator untuk aktivasi lisensi PRO VIP.")
               }
               className="w-full mt-2 py-1.5 px-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-[10.5px] rounded-xl shadow-sm transition-all"
             >

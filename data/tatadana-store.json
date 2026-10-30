@@ -10,7 +10,7 @@
     "telegramConnected": true,
     "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80",
     "createdAt": "2026-10-15T09:00:00+07:00",
-    "updatedAt": "2026-10-30T09:55:00.000Z",
+    "updatedAt": "2026-10-30T05:02:34.306Z",
     "telegramChatId": 8745100924
   },
   "wallets": [
@@ -169,6 +169,61 @@
   "aiLogs": [],
   "adminLogs": [
     {
+      "id": "adm-1793336567180",
+      "adminId": "adm-root-001",
+      "adminName": "Superadmin Lily Latifah",
+      "targetUserId": "usr-1793336531127",
+      "targetUserName": "amelia",
+      "action": "APPROVE_USER_REGISTRATION",
+      "reason": "Pendaftaran pengguna disetujui & akun diaktifkan",
+      "ipAddress": "127.0.0.1",
+      "createdAt": "2026-10-30T05:02:47.180Z"
+    },
+    {
+      "id": "adm-1793336554341",
+      "createdAt": "2026-10-30T05:02:34.341Z",
+      "adminId": "adm-root-001",
+      "adminName": "Owner Lily Latifah",
+      "targetUserId": "usr-lily-001",
+      "targetUserName": "Lily Latifah",
+      "action": "SUPERADMIN_LOGIN_PRO_VIP",
+      "reason": "Autentikasi Owner Lily Latifah berhasil dengan paket PRO VIP",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "adm-1793336531127",
+      "adminId": "system-auth",
+      "adminName": "Registration Pipeline",
+      "targetUserId": "usr-1793336531127",
+      "targetUserName": "amelia",
+      "action": "USER_REGISTERED_PENDING_APPROVAL",
+      "reason": "Pendaftaran baru ameliaputriutari04@gmail.com menunggu aktivasi superadmin",
+      "ipAddress": "127.0.0.1",
+      "createdAt": "2026-10-30T05:02:11.127Z"
+    },
+    {
+      "id": "adm-1793336412987",
+      "createdAt": "2026-10-30T05:00:12.987Z",
+      "adminId": "adm-root-001",
+      "adminName": "Owner Lily Latifah",
+      "targetUserId": "usr-lily-001",
+      "targetUserName": "Lily Latifah",
+      "action": "SUPERADMIN_LOGIN_PRO_VIP",
+      "reason": "Autentikasi Owner Lily Latifah berhasil dengan paket PRO VIP",
+      "ipAddress": "127.0.0.1"
+    },
+    {
+      "id": "adm-1793330605755",
+      "createdAt": "2026-10-30T03:23:25.755Z",
+      "adminId": "adm-root-001",
+      "adminName": "Owner Lily Latifah",
+      "targetUserId": "usr-lily-001",
+      "targetUserName": "Lily Latifah",
+      "action": "SUPERADMIN_LOGIN_PRO_VIP",
+      "reason": "Autentikasi Owner Lily Latifah berhasil dengan paket PRO VIP",
+      "ipAddress": "127.0.0.1"
+    },
+    {
       "id": "adm-reset-001",
       "adminId": "adm-root-001",
       "adminName": "Superadmin Lily Latifah",
@@ -182,6 +237,21 @@
   ],
   "registeredUsers": [
     {
+      "id": "usr-1793336531127",
+      "fullName": "amelia",
+      "email": "ameliaputriutari04@gmail.com",
+      "password": "amelia",
+      "phoneWhatsapp": "0813",
+      "role": "user",
+      "approvalStatus": "approved",
+      "defaultCurrency": "IDR",
+      "telegramConnected": false,
+      "avatarUrl": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80",
+      "registrationToken": "47893",
+      "createdAt": "2026-10-30T05:02:11.127Z",
+      "updatedAt": "2026-10-30T05:02:47.180Z"
+    },
+    {
       "id": "usr-lily-001",
       "fullName": "Lily Latifah",
       "email": "lilylatifah1234@gmail.com",
@@ -193,7 +263,7 @@
       "telegramConnected": true,
       "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80",
       "createdAt": "2026-01-15T08:00:00+07:00",
-      "updatedAt": "2026-10-30T09:55:00.000Z"
+      "updatedAt": "2026-10-30T05:02:34.306Z"
     }
   ]
 }

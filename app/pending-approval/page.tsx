@@ -18,8 +18,8 @@ import {
 function PendingApprovalContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const emailParam = searchParams.get("email") || "budi.santoso@tatadana.id";
-  const nameParam = searchParams.get("name") || "Budi Santoso";
+  const emailParam = searchParams.get("email") || "user@tatadana.id";
+  const nameParam = searchParams.get("name") || "Pengguna";
 
   const [email, setEmail] = useState(emailParam);
   const [userName, setUserName] = useState(nameParam);

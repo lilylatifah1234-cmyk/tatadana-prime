@@ -233,8 +233,10 @@ export async function evaluateWealthAdvisor(
     // Check if single tx exceeds 20% of monthly budget
     const ratio = newTxAmount / relevantBudget.capAmount;
     if (ratio >= 0.2) {
+      const profile = await db.getProfile();
+      const userName = profile?.fullName || "Klien";
       const insight = `🤖 Wealth Advisor Insights
-Halo Naftaly! Kami mendeteksi pengeluaran tunggal sebesar ${new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(newTxAmount)} pada kategori ${categoryName}, yang setara dengan ${Math.round(ratio * 100)}% dari seluruh alokasi bulanan kamu.
+Halo ${userName}! Kami mendeteksi pengeluaran tunggal sebesar ${new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(newTxAmount)} pada kategori ${categoryName}, yang setara dengan ${Math.round(ratio * 100)}% dari seluruh alokasi bulanan kamu.
 💡 Rekomendasi Taktis: Tunda pengeluaran diskresioner kategori ini selama 10 hari ke depan guna mengamankan sisa likuiditas sebelum penutupan buku kas akhir bulan.`;
 
       await db.addAILog({
